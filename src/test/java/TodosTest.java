@@ -17,7 +17,7 @@ public class TodosTest {
         meeting = new Meeting(
                 555,
                 "meeting",
-                "Выкатка 3й версии приложения",
+                "Выкатка 3й версии приложения и не забыть позвонить родителям",
                 "Приложение НетоБанка",
                 "Во вторник после обеда"
         );
@@ -27,7 +27,7 @@ public class TodosTest {
     }
 
     @Test
-    public void shouldMatchInTodosSimpleTask() {
+    public void shouldSearchInTodosSimpleTask() {
         Task[] act = todos.search("Позвонить");
         Task[] exp = {simpleTask};
 
@@ -35,7 +35,7 @@ public class TodosTest {
     }
 
     @Test
-    public void shouldNotMatchInTodosSimpleTask() {
+    public void shouldNotSearchInTodosSimpleTask() {
         Task[] act = todos.search("мыным жингыртӥз");
         Task[] exp = {simpleTask};
 
@@ -43,7 +43,7 @@ public class TodosTest {
     }
 
     @Test
-    public void shouldMatchInTodosEpicTask() {
+    public void shouldSearchInTodosEpicTask() {
         Task[] act = todos.search("Хлеб");
         Task[] exp = {epic};
 
@@ -51,7 +51,7 @@ public class TodosTest {
     }
 
     @Test
-    public void shouldNotMatchInTodosEpicTask() {
+    public void shouldNotSearchInTodosEpicTask() {
         Task[] act = todos.search("bread");
         Task[] exp = {epic};
 
@@ -59,7 +59,7 @@ public class TodosTest {
     }
 
     @Test
-    public void shouldMatchInTodosMeetingTask() {
+    public void shouldSearchInTodosMeetingTask() {
         Task[] act1 = todos.search("3");
         Task[] act2 = todos.search("Приложение");
         Task[] exp = {meeting};
@@ -69,7 +69,7 @@ public class TodosTest {
     }
 
     @Test
-    public void shouldNotMatchInTodosMeetingTask() {
+    public void shouldNotSearchInTodosMeetingTask() {
         Task[] act1 = todos.search("15");
         Task[] act2 = todos.search("app");
         Task[] exp = {meeting};
@@ -81,9 +81,12 @@ public class TodosTest {
     @Test
     public void shouldAddThreeTasksOfDifferentType() {
         Task[] expected = {simpleTask, epic, meeting};
-        Task[] actual = todos.findAll();
+        Todos actual = new Todos();
+        actual.add(simpleTask);
+        actual.add(epic);
+        actual.add(meeting);
 
-        Assertions.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual.findAll());
     }
 
     @Test
@@ -137,4 +140,28 @@ public class TodosTest {
         Assertions.assertEquals(exp, act1);
         Assertions.assertEquals(exp, act2);
     }
+
+    @Test
+    public void shouldSearchSeveral() {
+        Task[] expectedArray = {simpleTask, meeting};
+        Task[] actArray = todos.search("родителям");
+
+        Assertions.assertArrayEquals(actArray, expectedArray);
+    }
+
+    @Test
+    public void shouldSearchOnlyOneTask() {
+        Task[] act = todos.search("НетоБанка");
+        Task[] exp = {meeting};
+
+        Assertions.assertArrayEquals(exp, act);
+    }
+
+    @Test
+    public void shouldSearchNull() {
+        Task[] emptyTask = {};
+
+        Assertions.assertArrayEquals(todos.search("yellow submarine"), emptyTask);
+    }
+
 }
